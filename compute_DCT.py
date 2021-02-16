@@ -12,7 +12,7 @@ def compute_DCT(f):
     """
     N = len(f)
     Fk = sc.fft.dct(f, 1)/N
-    Fk[0] = Fk[0]/2
-    Fk[-1] = Fk[-1]/2
+#    Fk[0] = Fk[0]/2
+#    Fk[-1] = Fk[-1]/2
     k = np.arange(0, N)
     return k, Fk
