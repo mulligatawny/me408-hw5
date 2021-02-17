@@ -15,7 +15,6 @@ def DCT(xj, f):
 
     """
     N = int(len(xj))-1
-    fc = np.zeros_like(xj, dtype='float')
     Fk = np.zeros_like(xj, dtype='float')
 
     for k in range(N+1):
@@ -31,7 +30,6 @@ def DCT(xj, f):
         else:
             ak = ak*2/N
 
-        fc = fc + ak*np.cos(k*xj)
         Fk[k] = ak
     return Fk
 
@@ -47,7 +45,6 @@ def IDCT(xj, Fk):
     """
     fc = np.zeros_like(xj, dtype='float')
     N = int(len(xj))-1
-    print(N)
 
     for k in range(N+1):
         fc = fc + Fk[k]*np.cos(k*xj)
