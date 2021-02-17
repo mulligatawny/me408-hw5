@@ -5,7 +5,7 @@ from transforms import cheby
 
 N = np.array([4, 8, 16, 32])
 
-def plot_derivative(N, func=1, method='chebyshev'):
+def plot_derivative(N, func, method):
     t = np.arange(0, N+1)*np.pi/N
     x = np.cos(t)
     if func == 1:
@@ -40,21 +40,26 @@ def plot_derivative(N, func=1, method='chebyshev'):
         phi = np.append(phi, 0.0)
         # inverse transform
         fp = cheby.icheby(t, phi)
-        plt.plot(x, fp, '-o', label='N = {}'.format(N))
     if method=='finiteDiff':
         # compute derivative...
-
-        return dfdx
+        x = np.linspace(-1, 1, N+1)
+        fp = np.zeros_like(x, dtype='float')
+        dx = 2/(N)
+        fp[0] =(f(x[1])-f(x[0]))/dx
+        fp[-1] = (f(x[-1])-f(x[-2]))/dx
+        for i in range(1,N):
+            fp[i] = (f(x[i+1])-f(x[i-1]))/(2*dx)
+    plt.plot(x, fp, '-o', label='N = {}'.format(N))
+    return dfdx
 
 for i in range(len(N)):
-    dfdx = plot_derivative(N[i], 1, 'chebyshev')
+    dfdx = plot_derivative(N[i], 1, 'finiteDiff')
 
 # exact derivative
 x = np.linspace(-1, 1, 128)
 plt.plot(x, dfdx(x), '.', label='exact')
 plt.xlabel('$x$')
 plt.ylabel('$df$/$dx$')
-plt.title('$f(x) = 1$')
 plt.legend()
 plt.show()
 
