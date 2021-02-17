@@ -1,34 +1,28 @@
 # 3/4
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy as sc
-import compute_DCT as dct
-import dct
+from transforms import cheby
 
 N = np.array([4, 8, 16, 32])
 
-def chebyshev(N):
-    # cosine mesh
-    j = np.flip(np.arange(0, N+1))
-    x = np.cos(np.pi*j/N)
-    # function evaluated on cosine mesh (uncomment one)
-    #f = lambda x: x*np.exp(-(x**2)/2)
-    f = lambda x: x**3
-    #f = np.piecewise(x, [x < 0, x >= 0], \
-    #[lambda x: -2*x-1,lambda x: 2*x-1])
-    # compute Chebyshev coefficients
-    #k, Fk = dct.compute_DCT(f)
-    Fk = dct.DCT(x, f)
-    # plot coefficients
+def plot_transform(N, func):
+    t = np.arange(0, N+1)*np.pi/N # equal grid
+    x = np.cos(t) # unequal grid
+    if func == 1:
+        f = lambda x: x**6 # test function
+    elif func == 2:
+        f = lambda x: x*np.exp(-(x**2)/2) # part (a)
+    else:
+        f = lambda x: np.piecewise(x, [x < 0, x >= 0], \
+        [lambda x: -2*x-1,lambda x: 2*x-1]) # part (b)
+    Fk = cheby.cheby(x, f)
     k = np.arange(0, N+1)
-    plt.plot(k, np.abs(Fk),'-o', label='N = {}'.format(N))
+    plt.plot(k, np.abs(Fk), '-o', label='N = {}'.format(N))
 
 for i in range(len(N)):
-    chebyshev(N[i])
+    plot_transform(N[i], 1)
 
 plt.xlabel('$n$')
-plt.ylabel('$a_{n}$')
-plt.title('Piecewise function')
-#plt.xlim([-0.5,8.5])
+plt.ylabel('$|a_{n}|$')
 plt.legend()
 plt.show()
